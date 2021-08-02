@@ -29,11 +29,15 @@ io.on('connection', (socket)=>{
     //On calluser from frontend, we pass data from the frontend to here,and pass the collected data to userToCall and establish a connection request to the other user
     socket.on('calluser', ({userToCall, signalData, from, name}) => {
         io.to(userToCall).emit('calluser', {signal: signalData, from, name})
+        console.log('Name: ', name)
+        console.log('From: ', from)
+        console.log('User to call: ', userToCall)
     })
 
     //On answercall, signal data and the id of the user who initiated the call is passed from front end to here and the connection between me and the other user is complete
-    socket.on('answercall', (data) => {
-        io.to(data.to).emit('callaccepted', data.signal)
+    socket.on('answercall', ({signal, to}) => {
+        io.to(to).emit('callaccepted', signal)
+        console.log('The id of the person who initiated the call: ', to)
     })
 })
 
